@@ -1,0 +1,115 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="ugo-previewer" attributes="selector baseUrl placeholder">
+    <template>
+        <content></content>
+    </template>
+    <script>
+        Polymer('ugo-previewer', {
+            /**
+             * Base Url to add to source path
+             *
+             * @type {String}
+             */
+            baseUrl: '',
+            /**
+             * selector that point to the field we want to preview
+             *
+             * @type {String}
+             */
+            selector: null,
+
+            /**
+             * source we want to preview
+             * @type {HTMLElement}
+             */
+            source: null,
+
+            /**
+             * target who will display the preview
+             * @type {HTMLElement}
+             */
+            target: null,
+
+            /**
+             * Default image set in the src attribute
+             * If the source value is empty then we put the placeholder
+             * @type {String}
+             */
+            placeholder: null,
+
+            /**
+             * Job interval
+             *
+             * @type {Number}
+             */
+            interval: 350,
+
+            /**
+             * Constructor
+             */
+            ready: function() {
+                if (null !== this.selector) { //without selector attribute does nothing
+                    this.source = document.querySelector(this.selector);
+                    this.target = this.querySelector('img, audio, video');
+                    this.setMedia();
+
+                    this.source.addEventListener('change', function() {
+                        this.setMedia();
+                    }.bind(this), false);
+                    this.source.addEventListener('keyup', function() {
+                        this.setMedia();
+                    }.bind(this), false);
+                }
+            },
+
+            /**
+             * Set media to preview
+             */
+            setMedia: function() {
+                this.job('setMedia', function () {
+                    var value = this.getSourceValue(),
+                        media = this.baseUrl + value;
+
+                    if (value) {
+                        try {
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('HEAD', media, true);
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState == 4) {
+                                    if(xhr.status == 200) {
+                                        this.target.setAttribute('src', media);
+                                    } else {
+                                        this.target.setAttribute('src', this.placeholder);
+                                    }
+                                }
+                            }.bind(this);
+                            xhr.send(null);
+                        } catch (e) {
+                            this.target.setAttribute('src', this.placeholder);
+                        }
+
+                    } else {
+                        this.target.setAttribute('src', this.placeholder);
+                    }
+                }, this.interval);
+            },
+
+            /**
+             * Get source value
+             *
+             * @returns {string|Number}
+             */
+            getSourceValue: function() {
+                switch (this.source.tagName) {
+                    case 'SELECT':
+                        return this.source.options[this.source.selectedIndex].value;
+                        break;
+                    default:
+                        return this.source.value;
+                        break;
+                }
+            }
+        });
+    </script>
+</polymer-element>

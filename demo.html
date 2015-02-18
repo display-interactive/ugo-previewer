@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <meta charset="utf-8">
+    <title>ugo previewer demo</title>
+    <script src="../webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="ugo-previewer.html">
+    <style>
+        #container {
+            padding-top: 15%;
+            text-align: center;
+        }
+
+    </style>
+</head>
+
+<body unresolved>
+
+<div id="container">
+    <h1><code>Ugo previewer with polymer</code> in action (type: "test/test.gif"):</h1>
+    <input type="text" id="field" value="" />
+    <br/><br/>
+    <ugo-previewer selector="#field" baseUrl="http://localhost/polymer-ugo/ugo-previewer/" placeholder="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=">
+        <img alt="Preview" src="" width="140" height="140" />
+    </ugo-previewer>
+
+    <br/><br><br>
+    <input type="text" id="field2" value="test.webm" />
+    <br/><br/>
+    <ugo-previewer selector="#field2">
+        <video src="" width="320" height="180" controls="controls"></video>
+    </ugo-previewer>
+</div>
+</body>
+</html>

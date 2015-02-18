@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>previewer-element</title>
+
+    <!-- Import dependencies -->
+    <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../ugo-previewer.html">
+</head>
+
+<body>
+
+<input type="text" id="field" value="" />
+<br/><br/>
+<ugo-previewer id="typical" selector="#field" placeholder="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=">
+    <img alt="Preview" src="" width="140" height="140" />
+</ugo-previewer>
+
+<script>
+    suite('<ugo-previewer>', function() {
+        var el = document.getElementById('typical');
+
+        test('exists', function() {
+            assert.isNotNull(el);
+        });
+
+        test('placeholder loaded', function(done) {
+            setTimeout(function() {
+                assert.equal(el.getAttribute('placeholder'), el.target.getAttribute('src'));
+
+                done();
+            }, el.interval+1)
+        });
+
+        test('Test change event', function(done) {
+            var target = document.getElementById('field');
+            target.value = 'test.gif';
+
+            var event; // The custom event that will be created
+            if (document.createEvent) {
+                event = document.createEvent("HTMLEvents");
+                event.initEvent("change", true, true);
+            } else {
+                event = document.createEventObject();
+                event.eventType = "change";
+            }
+
+            event.eventName = "change";
+
+            if (document.createEvent) {
+                target.dispatchEvent(event);
+            } else {
+                target.fireEvent("on" + event.eventType, event);
+            }
+
+            setTimeout(function() {
+                assert.equal(el.target.getAttribute('src'), target.value);
+                done();
+            }, el.interval*2);
+        });
+    });
+</script>
+
+</body>
+</html>

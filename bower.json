@@ -1,0 +1,23 @@
+{
+    "name": "ugo-previewer",
+    "version": "0.0.1",
+    "authors": [
+        "Florian Roy"
+    ],
+    "description": "Polymer Element that help to previews image, audio, video written in a form field",
+    "main": "element/*",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "keywords": ["Polymer", "web-components", "media", "preview", "html", "form", "audio", "img", "video"],
+    "dependencies": {
+        "polymer": "Polymer/polymer#~0.5.4"
+    },
+    "devDependencies": {
+        "web-component-tester": "*"
+    }
+}
