@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="ugo-previewer" attributes="selector baseUrl placeholder">
+<polymer-element name="ugo-previewer" attributes="selector baseUrl placeholder event">
     <template>
         <content></content>
     </template>
@@ -46,6 +46,12 @@
             interval: 350,
 
             /**
+             * Events trigger the set media
+             * @param {String}
+             */
+            event: 'change keyup blur',
+
+            /**
              * Constructor
              */
             ready: function() {
@@ -53,13 +59,7 @@
                     this.source = document.querySelector(this.selector);
                     this.target = this.querySelector('img, audio, video');
                     this.setMedia();
-
-                    this.source.addEventListener('change', function() {
-                        this.setMedia();
-                    }.bind(this), false);
-                    this.source.addEventListener('keyup', function() {
-                        this.setMedia();
-                    }.bind(this), false);
+                    this.addEventListeners();
                 }
             },
 
@@ -108,6 +108,19 @@
                     default:
                         return this.source.value;
                         break;
+                }
+            },
+
+            /**
+             * Add listeners
+             */
+            addEventListeners: function() {
+                var events = this.event.split(' ');
+
+                for (var i = 0; i < events.length; i++) {
+                    this.source.addEventListener(events[i], function() {
+                        this.setMedia();
+                    }.bind(this), false);
                 }
             }
         });
