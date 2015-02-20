@@ -15,7 +15,7 @@
     ],
     "keywords": ["Polymer", "web-components", "media", "preview", "html", "form", "audio", "img", "video"],
     "dependencies": {
-        "polymer": "Polymer/polymer#~0.5.4"
+        "polymer": "Polymer/polymer#master"
     },
     "devDependencies": {
         "web-component-tester": "*"
