@@ -2,7 +2,7 @@
 
 <polymer-element name="ugo-previewer" attributes="selector baseUrl placeholder event">
     <template>
-        <content></content>
+        <content id="ugoPreviewerContent" select="img, video, audio"></content>
     </template>
     <script>
         Polymer('ugo-previewer', {
@@ -57,7 +57,7 @@
             ready: function() {
                 if (null !== this.selector) { //without selector attribute does nothing
                     this.source = document.querySelector(this.selector);
-                    this.target = this.querySelector('img, audio, video');
+                    this.target = this.$.ugoPreviewerContent.getDistributedNodes()[0];
                     this.setMedia();
                     this.addEventListeners();
                 }
