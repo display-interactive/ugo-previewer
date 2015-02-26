@@ -54,7 +54,7 @@
             /**
              * Constructor
              */
-            ready: function() {
+            domReady: function() {
                 if (null !== this.selector) { //without selector attribute does nothing
                     this.source = document.querySelector(this.selector);
                     this.target = this.$.ugoPreviewerContent.getDistributedNodes()[0];
