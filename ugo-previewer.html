@@ -59,7 +59,7 @@
                     this.source = document.querySelector(this.selector);
                     this.target = this.$.ugoPreviewerContent.getDistributedNodes()[0];
                     this.setMedia();
-                    this.addEventListeners();
+                    this.addListeners();
                 }
             },
 
@@ -114,7 +114,7 @@
             /**
              * Add listeners
              */
-            addEventListeners: function() {
+            addListeners: function() {
                 var events = this.event.split(' ');
 
                 for (var i = 0; i < events.length; i++) {
