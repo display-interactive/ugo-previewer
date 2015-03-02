@@ -58,7 +58,7 @@
                 if (null !== this.selector) { //without selector attribute does nothing
                     this.source = document.querySelector(this.selector);
                     this.target = this.$.ugoPreviewerContent.getDistributedNodes()[0];
-                    this.setMedia();
+                    this.feedMedia();
                     this.addListeners();
                 }
             },
@@ -66,8 +66,8 @@
             /**
              * Set media to preview
              */
-            setMedia: function() {
-                this.job('setMedia', function () {
+            feedMedia: function() {
+                this.job('feedMedia', function () {
                     var value = this.getSourceValue(),
                         media = this.baseUrl + value;
 
@@ -80,19 +80,28 @@
                                     if(xhr.status == 200) {
                                         this.target.setAttribute('src', media);
                                     } else {
-                                        this.target.setAttribute('src', this.placeholder);
+                                        this.feedMediaWithPlaceholder();
                                     }
                                 }
                             }.bind(this);
                             xhr.send(null);
                         } catch (e) {
-                            this.target.setAttribute('src', this.placeholder);
+                            this.feedMediaWithPlaceholder();
                         }
 
                     } else {
-                        this.target.setAttribute('src', this.placeholder);
+                        this.feedMediaWithPlaceholder();
                     }
                 }, this.interval);
+            },
+
+            /**
+             * set preview with placeholder if placeholder is setted
+             */
+            feedMediaWithPlaceholder: function() {
+                if (this.placeholder) {
+                    this.target.setAttribute('src', this.placeholder);
+                }
             },
 
             /**
@@ -119,7 +128,7 @@
 
                 for (var i = 0; i < events.length; i++) {
                     this.source.addEventListener(events[i], function() {
-                        this.setMedia();
+                        this.feedMedia();
                     }.bind(this), false);
                 }
             }
