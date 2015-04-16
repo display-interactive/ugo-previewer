@@ -1,137 +1,182 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="ugo-previewer" attributes="selector baseUrl placeholder event">
+<dom-module id="ugo-previewer" attributes="selector baseUrl placeholder event">
     <template>
-        <content id="ugoPreviewerContent" select="img, video, audio"></content>
+        <content id="contentPreviewer" select="img, video, audio"></content>
     </template>
-    <script>
-        Polymer('ugo-previewer', {
-            /**
-             * Base Url to add to source path
-             *
-             * @type {String}
-             */
-            baseUrl: '',
+</dom-module>
+<script>
+    Polymer({
+        is: 'ugo-previewer',
+
+        properties: {
             /**
              * selector that point to the field we want to preview
-             *
-             * @type {String}
              */
-            selector: null,
+            selector: {
+                type: String,
+                value: null
+            },
 
             /**
-             * source we want to preview
-             * @type {HTMLElement}
+             * Base Url to add to source path
              */
-            source: null,
-
-            /**
-             * target who will display the preview
-             * @type {HTMLElement}
-             */
-            target: null,
+            baseUrl: {
+                type: String,
+                value: ''
+            },
 
             /**
              * Default image set in the src attribute
              * If the source value is empty then we put the placeholder
-             * @type {String}
              */
-            placeholder: null,
-
-            /**
-             * Job interval
-             *
-             * @type {Number}
-             */
-            interval: 350,
+            placeholder: {
+                type: String,
+                value: null
+            },
 
             /**
              * Events trigger the set media
-             * @param {String}
              */
-            event: 'change keyup blur',
-
-            /**
-             * Constructor
-             */
-            domReady: function() {
-                if (null !== this.selector) { //without selector attribute does nothing
-                    this.source = document.querySelector(this.selector);
-                    this.target = this.$.ugoPreviewerContent.getDistributedNodes()[0];
-                    this.feedMedia();
-                    this.addListeners();
-                }
+            event: {
+                type: String,
+                value: 'change keyup blur'
             },
 
             /**
-             * Set media to preview
+             * Job interval
              */
-            feedMedia: function() {
-                this.job('feedMedia', function () {
-                    var value = this.getSourceValue(),
+            interval: {
+                type: Number,
+                value: 350
+            }
+        },
+
+        /**
+         * source we want to preview
+         * @type {HTMLElement}
+         */
+        source: null,
+
+        /**
+         * target who will display the preview
+         * @type {HTMLElement}
+         */
+        target: null,
+
+        /**
+         * Date of the last job launched
+         *
+         * @type Object
+         */
+        jobs: {},
+
+        /**
+         * timers to launch the last jobs
+         *
+         * @type Object
+         */
+        timers: {},
+
+        /**
+         * Constructor
+         */
+        ready: function() {
+            if (null !== this.selector) { //without selector attribute does nothing
+                this.source = document.querySelector(this.selector);
+                this.target = Polymer.dom(this.$.contentPreviewer).getDistributedNodes()[0];
+                this.feedMedia();
+                this.addListeners();
+            }
+        },
+
+        /**
+         * Set media to preview
+         */
+        feedMedia: function() {
+            this.job('feedMedia', function () {
+                var value = this.getSourceValue(),
                         media = this.baseUrl + value;
 
-                    if (value) {
-                        try {
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('HEAD', media, true);
-                            xhr.onreadystatechange = function () {
-                                if (xhr.readyState == 4) {
-                                    if(xhr.status == 200) {
-                                        this.target.setAttribute('src', media);
-                                    } else {
-                                        this.feedMediaWithPlaceholder();
-                                    }
+                if (value) {
+                    try {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('HEAD', media, true);
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState == 4) {
+                                if(xhr.status == 200) {
+                                    this.target.setAttribute('src', media);
+                                } else {
+                                    this.feedMediaWithPlaceholder();
                                 }
-                            }.bind(this);
-                            xhr.send(null);
-                        } catch (e) {
-                            this.feedMediaWithPlaceholder();
-                        }
-
-                    } else {
+                            }
+                        }.bind(this);
+                        xhr.send(null);
+                    } catch (e) {
                         this.feedMediaWithPlaceholder();
                     }
-                }, this.interval);
-            },
 
-            /**
-             * set preview with placeholder if placeholder is setted
-             */
-            feedMediaWithPlaceholder: function() {
-                if (this.placeholder) {
-                    this.target.setAttribute('src', this.placeholder);
+                } else {
+                    this.feedMediaWithPlaceholder();
                 }
-            },
+            }.bind(this), this.interval);
+        },
 
-            /**
-             * Get source value
-             *
-             * @returns {string|Number}
-             */
-            getSourceValue: function() {
-                switch (this.source.tagName) {
-                    case 'SELECT':
-                        return this.source.options[this.source.selectedIndex].value;
-                        break;
-                    default:
-                        return this.source.value;
-                        break;
-                }
-            },
-
-            /**
-             * Add listeners
-             */
-            addListeners: function() {
-                var events = this.event.split(' ');
-
-                for (var i = 0; i < events.length; i++) {
-                    this.source.addEventListener(events[i], function() {
-                        this.feedMedia();
-                    }.bind(this), false);
-                }
+        /**
+         * set preview with placeholder if placeholder is setted
+         */
+        feedMediaWithPlaceholder: function() {
+            if (this.placeholder) {
+                this.target.setAttribute('src', this.placeholder);
             }
-        });
-    </script>
-</polymer-element>
+        },
+
+        /**
+         * Get source value
+         *
+         * @returns {string|Number}
+         */
+        getSourceValue: function() {
+            switch (this.source.tagName) {
+                case 'SELECT':
+                    return this.source.options[this.source.selectedIndex].value;
+                    break;
+                default:
+                    return this.source.value;
+                    break;
+            }
+        },
+
+        /**
+         * Add listeners
+         */
+        addListeners: function() {
+            var events = this.event.split(' ');
+
+            for (var i = 0; i < events.length; i++) {
+                this.source.addEventListener(events[i], function() {
+                    this.feedMedia();
+                }.bind(this), false);
+            }
+        },
+
+        /**
+         * Handle the missing polymer job fonction
+         *
+         * @param {String} name
+         * @param {Function} method
+         * @param {Number} interval
+         */
+        job: function(name, method, interval) {
+            if (undefined === this.jobs[name] || (Date.now() - this.jobs[name]) > interval) {
+                method();
+                this.jobs[name] = Date.now();
+            } else if (this.jobs[name]) {
+                if (this.timers[name]) clearTimeout(this.timers[name]);
+                this.timers[name] = setTimeout(function() {
+                    method();
+                }, Date.now() - this.jobs[name]);
+            }
+        }
+    });
+</script>

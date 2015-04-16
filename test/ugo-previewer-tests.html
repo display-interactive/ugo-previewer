@@ -29,6 +29,27 @@
             assert.isNotNull(el);
         });
 
+        test('job', function(done) {
+            var step = 0;
+            el.job('test', function() {
+                step = 1;
+            }, 350);
+            el.job('test', function() {
+                step = 2;
+            }, 350);
+
+            assert.equal(1, step);
+
+            setTimeout(function() {
+                el.job('test', function() {
+                    step = 3;
+                }, 350);
+
+                assert.equal(3, step);
+                done();
+            }, 800)
+        });
+
         test('placeholder loaded', function(done) {
             setTimeout(function() {
                 assert.equal(el.getAttribute('placeholder'), el.target.getAttribute('src'));
