@@ -101,6 +101,8 @@
             feedMediaWithPlaceholder: function() {
                 if (this.placeholder) {
                     this.target.setAttribute('src', this.placeholder);
+                } else {
+                    this.target.setAttribute('src', '');
                 }
             },
 
