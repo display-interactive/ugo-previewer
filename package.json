@@ -4,7 +4,7 @@
     },
     "description": "Polymer Element that help to previews image, audio, video written in a form field",
     "devDependencies": {
-        "web-component-tester": "~2.*"
+        "web-component-tester": "~3.*"
     },
     "name": "ugo-previewer",
     "repository": {

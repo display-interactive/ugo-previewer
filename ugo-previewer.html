@@ -65,20 +65,6 @@
         target: null,
 
         /**
-         * Date of the last job launched
-         *
-         * @type Object
-         */
-        jobs: {},
-
-        /**
-         * timers to launch the last jobs
-         *
-         * @type Object
-         */
-        timers: {},
-
-        /**
          * Constructor
          */
         ready: function() {
@@ -94,11 +80,11 @@
          * Set media to preview
          */
         feedMedia: function() {
-            this.job('feedMedia', function () {
+            this.debounce('feedMedia', function () {
                 var value = this.getSourceValue(),
-                        media = this.baseUrl + value;
+                    media = this.baseUrl + value;
 
-                if (value) {
+                if (value && this._isMedia(media)) {
                     try {
                         var xhr = new XMLHttpRequest();
                         xhr.open('HEAD', media, true);
@@ -128,6 +114,8 @@
         feedMediaWithPlaceholder: function() {
             if (this.placeholder) {
                 this.target.setAttribute('src', this.placeholder);
+            } else {
+                this.target.setAttribute('src', '');
             }
         },
 
@@ -161,22 +149,13 @@
         },
 
         /**
-         * Handle the missing polymer job fonction
-         *
-         * @param {String} name
-         * @param {Function} method
-         * @param {Number} interval
+         * @return {Boolean}
+         * @private
          */
-        job: function(name, method, interval) {
-            if (undefined === this.jobs[name] || (Date.now() - this.jobs[name]) > interval) {
-                method();
-                this.jobs[name] = Date.now();
-            } else if (this.jobs[name]) {
-                if (this.timers[name]) clearTimeout(this.timers[name]);
-                this.timers[name] = setTimeout(function() {
-                    method();
-                }, Date.now() - this.jobs[name]);
-            }
+        _isMedia: function(url) {
+            var re = new RegExp('^.+\\.[a-z0-9].{1,4}$', 'i');
+
+            return re.test(url);
         }
     });
 </script>
