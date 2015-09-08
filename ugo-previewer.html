@@ -69,10 +69,12 @@
          */
         ready: function() {
             if (null !== this.selector) { //without selector attribute does nothing
-                this.source = document.querySelector(this.selector);
-                this.target = Polymer.dom(this.$.contentPreviewer).getDistributedNodes()[0];
-                this.feedMedia();
-                this.addListeners();
+                this.async(function() {
+                    this.source = document.querySelector(this.selector);
+                    this.target = Polymer.dom(this.$.contentPreviewer).getDistributedNodes()[0];
+                    this.feedMedia();
+                    this.addListeners();
+                });
             }
         },
 
