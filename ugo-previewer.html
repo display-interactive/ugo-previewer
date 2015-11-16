@@ -2,7 +2,7 @@
 
 <dom-module id="ugo-previewer">
     <template>
-        <content id="contentPreviewer" select="img, video, audio"></content>
+        <content id="contentPreviewer" select="img, video, audio, a"></content>
     </template>
 </dom-module>
 <script>
@@ -93,7 +93,7 @@
                         xhr.onreadystatechange = function () {
                             if (xhr.readyState == 4) {
                                 if(xhr.status == 200) {
-                                    this.target.setAttribute('src', media);
+                                    this.setTargetSource(media);
                                 } else {
                                     this.feedMediaWithPlaceholder();
                                 }
@@ -115,9 +115,23 @@
          */
         feedMediaWithPlaceholder: function() {
             if (this.placeholder) {
-                this.target.setAttribute('src', this.placeholder);
+                this.setTargetSource(this.placeholder);
             } else {
-                this.target.setAttribute('src', '');
+                this.setTargetSource('');
+            }
+        },
+
+        /**
+         *  set the target source depending on its type (a -> href, img|video|audio -> src)
+         */
+        setTargetSource: function(value) {
+            switch (this.target.tagName) {
+                case 'A':
+                    this.target.setAttribute('href', value);
+                    break;
+                default:
+                    this.target.setAttribute('src', value);
+                    break;
             }
         },
 
