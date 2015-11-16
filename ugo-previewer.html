@@ -36,6 +36,24 @@
             },
 
             /**
+             * Link label (the content of the a tag)
+             * You can use vars such as {url}, {fileName}, {ext}
+             */
+            label: {
+                type: String,
+                value: 'Download %ext file'
+            },
+
+            /**
+             * Empty link label (the content of the a tag)
+             * You can use vars such as {url}, {fileName}, {ext}
+             */
+            emptyLabel: {
+                type: String,
+                value: 'No file selected'
+            },
+
+            /**
              * Events trigger the set media
              */
             event: {
@@ -119,6 +137,8 @@
             } else {
                 this.setTargetSource('');
             }
+            if (this.target.tagName == 'A')
+                this.target.innerHTML = this.emptyLabel;
         },
 
         /**
@@ -128,11 +148,25 @@
             switch (this.target.tagName) {
                 case 'A':
                     this.target.setAttribute('href', value);
+                    this.target.innerHTML = this.getRichLabel(value);
                     break;
                 default:
                     this.target.setAttribute('src', value);
                     break;
             }
+        },
+
+        /**
+         *  Includes special vars in the label
+         */
+        getRichLabel: function(url) {
+            var richLabel = this.label;
+            var fileName = url.indexOf('/') != -1 ? url.slice(url.lastIndexOf('/'), url.length - 1) : '';
+            var ext = fileName.indexOf('.') != -1 ? fileName.slice(fileName.lastIndexOf('/'), fileName.length - 1) : '';
+            richLabel = richLabel.replace(/\{url\}/g, url);
+            richLabel = richLabel.replace(/\{fileName\}/g, ext);
+            richLabel = richLabel.replace(/\{ext\}/g, ext);
+            return richLabel;
         },
 
         /**
