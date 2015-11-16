@@ -161,8 +161,9 @@
          */
         getRichLabel: function(url) {
             var richLabel = this.label;
-            var fileName = url.indexOf('/') != -1 ? url.slice(url.lastIndexOf('/'), url.length - 1) : '';
-            var ext = fileName.indexOf('.') != -1 ? fileName.slice(fileName.lastIndexOf('/'), fileName.length - 1) : '';
+            var fileName = url.indexOf('/') != -1 ? url.slice(url.lastIndexOf('/') + 1, url.length - 1) : '';
+            var ext = fileName.indexOf('.') != -1 ? fileName.slice(fileName.lastIndexOf('.') + 1, fileName.length - 1) : '';
+            console.log(this.label, fileName, ext);
             richLabel = richLabel.replace(/\{url\}/g, url);
             richLabel = richLabel.replace(/\{fileName\}/g, ext);
             richLabel = richLabel.replace(/\{ext\}/g, ext);
