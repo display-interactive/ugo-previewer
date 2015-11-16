@@ -160,11 +160,11 @@
          *  Includes special vars in the label
          */
         getRichLabel: function(url) {
+            //Get back rich vars
             var richLabel = this.label;
             var fileName = url.indexOf('/') != -1 ? url.slice(url.lastIndexOf('/') + 1, url.length) : '';
             var ext = fileName.indexOf('.') != -1 ? fileName.slice(fileName.lastIndexOf('.') + 1, fileName.length) : '';
-            console.log('url '+url);
-            console.log(url, fileName, ext);
+            //Perform replacements
             richLabel = richLabel.replace(/\{url\}/g, url);
             richLabel = richLabel.replace(/\{fileName\}/g, ext);
             richLabel = richLabel.replace(/\{ext\}/g, ext);
