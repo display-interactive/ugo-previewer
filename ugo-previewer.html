@@ -189,13 +189,17 @@
          * set preview with placeholder if placeholder is setted
          */
         feedMediaWithPlaceholder: function() {
-            if (this.placeholder) {
-                this.setTargetSource(this.placeholder);
-            } else {
-                this.setTargetSource('');
-            }
-            if (this.target.tagName == 'A')
+            //Special case for links
+            if (this.target.tagName == 'A') {
+                this.setTargetSource('javascript:void(0)');
                 this.target.innerHTML = this.emptyLabel;
+            } else {
+                if (this.placeholder) {
+                    this.setTargetSource(this.placeholder);
+                } else {
+                    this.setTargetSource('');
+                }
+            }
         },
 
         /**
