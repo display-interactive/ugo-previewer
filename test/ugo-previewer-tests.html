@@ -30,6 +30,7 @@
         });
 
         test('_isMedia', function() {
+            console.log(el._isMedia);
             assert.isTrue(el._isMedia('test.gif'));
             assert.isFalse(el._isMedia('test'));
             assert.isTrue(el._isMedia('test.mpeg'));
@@ -71,12 +72,20 @@
         });
 
         test('Test richLabel', function() {
-            el.setTargetSource('http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf');
-            assert.equal(el.getRichLabel('Download {ext}'), 'Download pdf');
-            assert.equal(el.getRichLabel('Download {fileName}'), 'Download blakemortimer-en_US.pdf');
-            assert.equal(el.getRichLabel('Download {url}'), 'Download http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf');
+            var source = 'http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf';
+            el.displayIcons = false;
+            el.label = 'Download {ext}';
+            assert.equal(el.getRichLabel(source), 'Download pdf');
+            el.label = 'Download {fileName}';
+            assert.equal(el.getRichLabel(source), 'Download blakemortimer-en_US.pdf');
+            el.label = 'Download {url}';
+            assert.equal(el.getRichLabel(source), 'Download http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf');
         });
     });
+    (function() {
+        console.log('ready');
+        console.log(document.getElementById('typical'));
+    })();
 </script>
 
 </body>
