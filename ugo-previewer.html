@@ -3,6 +3,14 @@
 <dom-module id="ugo-previewer">
     <template>
         <content id="contentPreviewer" select="img, video, audio, a"></content>
+        <style>
+            .preview-icon {
+                display: block;
+                width: 48px;
+                height: 48px;
+                color: #fff;
+            }
+        </style>
     </template>
 </dom-module>
 <script>
@@ -51,6 +59,14 @@
             emptyLabel: {
                 type: String,
                 value: 'No file selected'
+            },
+
+            /**
+             * Display icons for files when using a link previewer
+             */
+            displayIcons: {
+                type: Boolean,
+                value: true
             },
 
             /**
@@ -168,6 +184,10 @@
             richLabel = richLabel.replace(/\{url\}/g, url);
             richLabel = richLabel.replace(/\{fileName\}/g, ext);
             richLabel = richLabel.replace(/\{ext\}/g, ext);
+            //Add icon
+            if (this.displayIcons) {
+                richLabel = '<svg class="icon icon-file-music"><use xlink:href="symbol-defs.svg#icon-file-music"></use></svg>'+richLabel;
+            }
             return richLabel;
         },
 

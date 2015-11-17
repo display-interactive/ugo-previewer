@@ -69,6 +69,13 @@
                 done();
             }, el.interval*2);
         });
+
+        test('Test richLabel', function() {
+            el.setTargetSource('http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf');
+            assert.equal(el.getRichLabel('Download {ext}'), 'Download pdf');
+            assert.equal(el.getRichLabel('Download {fileName}'), 'Download blakemortimer-en_US.pdf');
+            assert.equal(el.getRichLabel('Download {url}'), 'Download http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf');
+        });
     });
 </script>
 
