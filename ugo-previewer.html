@@ -191,7 +191,7 @@
         feedMediaWithPlaceholder: function() {
             //Special case for links
             if (this.target.tagName == 'A') {
-                this.setTargetSource('javascript:void(0)');
+                this.target.removeAttribute('href');
                 this.target.innerHTML = this.emptyLabel;
             } else {
                 if (this.placeholder) {
