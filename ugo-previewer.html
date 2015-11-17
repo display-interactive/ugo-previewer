@@ -1,5 +1,4 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="./symbol-defs.svg">
 
 <dom-module id="ugo-previewer">
     <template>
@@ -12,6 +11,15 @@
                 color: #fff;
             }
         </style>
+        <svg style="position: absolute; width: 0; height: 0;" width="0" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+            <symbol id="icon-file-music" viewBox="0 0 1024 1024">
+                <title>file-music</title>
+                <path fill="#444444" class="path1" d="M917.806 229.076c-22.21-30.292-53.174-65.7-87.178-99.704s-69.412-64.964-99.704-87.178c-51.574-37.82-76.592-42.194-90.924-42.194h-496c-44.112 0-80 35.888-80 80v864c0 44.112 35.886 80 80 80h736c44.112 0 80-35.888 80-80v-624c0-14.332-4.372-39.35-42.194-90.924v0zM785.374 174.626c30.7 30.7 54.8 58.398 72.58 81.374h-153.954v-153.946c22.982 17.78 50.678 41.878 81.374 72.572v0zM896 944c0 8.672-7.328 16-16 16h-736c-8.672 0-16-7.328-16-16v-864c0-8.672 7.328-16 16-16 0 0 495.956-0.002 496 0v224c0 17.672 14.324 32 32 32h224v624z"></path>
+                <path fill="#444444" class="path2" d="M756.288 391.252c-7.414-6.080-17.164-8.514-26.562-6.632l-320 64c-14.958 2.994-25.726 16.126-25.726 31.38v236.876c-18.832-8.174-40.678-12.876-64-12.876-70.692 0-128 42.98-128 96s57.308 96 128 96 128-42.98 128-96v-229.766l256-51.202v133.842c-18.832-8.174-40.678-12.876-64-12.876-70.692 0-128 42.98-128 96s57.308 96 128 96 128-42.98 128-96v-319.998c0-9.586-4.298-18.668-11.712-24.748z"></path>
+            </symbol>
+            </defs>
+        </svg>
     </template>
 </dom-module>
 <script>
@@ -187,7 +195,7 @@
             richLabel = richLabel.replace(/\{ext\}/g, ext);
             //Add icon
             if (this.displayIcons) {
-                richLabel = '<svg class="preview-icon icon-file-music"><use xlink:href="symbol-defs.svg#icon-file-music"></use></svg>'+richLabel;
+                richLabel = '<svg class="preview-icon icon-file-music"><use xlink:href="#icon-file-music"></use></svg>'+richLabel;
             }
             return richLabel;
         },
