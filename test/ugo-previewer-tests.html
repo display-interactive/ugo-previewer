@@ -20,6 +20,9 @@
 <ugo-previewer id="typical" selector="#field" placeholder="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=">
     <img alt="Preview" src="" width="140" height="140" />
 </ugo-previewer>
+<ugo-previewer id="fileLink" selector="#field">
+    <a src="" />
+</ugo-previewer>
 
 <script>
     suite('<ugo-previewer>', function() {
@@ -30,7 +33,6 @@
         });
 
         test('_isMedia', function() {
-            console.log(el._isMedia);
             assert.isTrue(el._isMedia('test.gif'));
             assert.isFalse(el._isMedia('test'));
             assert.isTrue(el._isMedia('test.mpeg'));
@@ -71,21 +73,25 @@
             }, el.interval*2);
         });
 
+        //Test file link
+        var el2 = document.getElementById('fileLink');
+
         test('Test richLabel', function() {
             var source = 'http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf';
-            el.displayIcons = false;
-            el.label = 'Download {ext}';
-            assert.equal(el.getRichLabel(source), 'Download pdf');
-            el.label = 'Download {fileName}';
-            assert.equal(el.getRichLabel(source), 'Download blakemortimer-en_US.pdf');
-            el.label = 'Download {url}';
-            assert.equal(el.getRichLabel(source), 'Download http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf');
+            el2.label = 'Download {ext}';
+            el2.setTargetSource(source);
+            assert.equal(el2.target.innerHTML, 'Download pdf');
+            el2.label = 'Download {fileName}';
+            el2.setTargetSource(source);
+            assert.equal(el2.target.innerHTML, 'Download blakemortimer-en_US.pdf');
+            el2.label = 'Download {url}';
+            el2.setTargetSource(source);
+            assert.equal(el2.target.innerHTML, 'Download http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf');
+            assert.equal(el2.target.getAttribute('class'), 'file-pdf');
+            el2.setTargetSource('http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.jpg');
+            assert.equal(el2.target.getAttribute('class'), 'file-picture');
         });
     });
-    (function() {
-        console.log('ready');
-        console.log(document.getElementById('typical'));
-    })();
 </script>
 
 </body>
