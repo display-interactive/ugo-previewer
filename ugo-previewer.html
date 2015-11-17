@@ -3,22 +3,6 @@
 <dom-module id="ugo-previewer">
     <template>
         <content id="contentPreviewer" select="img, video, audio, a"></content>
-        <style>
-            :host ::content a {
-                color: #00468C;
-            }
-
-            :host ::content .preview-icon path {
-                fill: currentColor;
-            }
-
-            :host ::content .preview-icon {
-                width: 48px;
-                height: 48px;
-                color: currentColor;
-                fill: currentColor;
-            }
-        </style>
     </template>
 </dom-module>
 <script>
@@ -67,14 +51,6 @@
             emptyLabel: {
                 type: String,
                 value: 'No file selected'
-            },
-
-            /**
-             * Display icons for files when using a link previewer
-             */
-            displayIcons: {
-                type: Boolean,
-                value: false
             },
 
             /**
@@ -165,7 +141,7 @@
                     this.feedMediaWithPlaceholder();
                     break;
             }
-            this.adaptIconClass('');
+            this.adaptTargetClass('');
         },
 
         /**
@@ -194,11 +170,11 @@
                     this.target.setAttribute('src', url);
                     break;
             }
-            this.adaptIconClass(ext);
+            this.adaptTargetClass(ext);
         },
 
         /**
-         *  Includes special vars in the label, and the icon if displayIcons is true
+         *  Includes special vars in the label
          *
          *  @returns {string}
          */
@@ -211,36 +187,38 @@
             return richLabel;
         },
 
-        adaptIconClass: function(ext) {
-            var iconClass = 'file-unknown';
+        /**
+         *  Change the target class depenfing on the file extension
+         */
+        adaptTargetClass: function(ext) {
+            var iconClass = 'file-icon-unknown';
             switch (ext.toLowerCase()) {
                 case 'mp3':
-                    iconClass = 'file-music';
+                    iconClass = 'file-icon-music';
                     break;
                 case 'pdf':
-                    iconClass = 'file-pdf';
+                    iconClass = 'file-icon-pdf';
                     break;
                 case 'jpg':
                 case 'jpeg':
                 case 'png':
                 case 'bmp':
                 case 'gif':
-                    iconClass = 'file-picture';
+                    iconClass = 'file-icon-picture';
                     break;
                 case 'avi':
                 case 'mov':
                 case 'mp4':
                 case 'm4v':
                 case 'webm':
-                    iconClass = 'file-video';
+                    iconClass = 'file-icon-video';
                     break;
                 case '':
-                    iconClass = 'file-empty';
+                    iconClass = 'file-icon-empty';
                     break;
             }
-
-            this.removeClasses(this.target, ['file-video', 'file-picture', 'file-pdf',
-                                            'file-music', 'file-empty', 'file-unknown'])
+            this.removeClasses(this.target, ['file-icon-video', 'file-icon-picture', 'file-icon-pdf',
+                                            'file-icon-music', 'file-icon-empty', 'file-icon-unknown'])
             this.target.classList.add(iconClass);
         },
 

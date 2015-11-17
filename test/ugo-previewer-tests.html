@@ -87,9 +87,9 @@
             el2.label = 'Download {url}';
             el2.setTargetSource(source);
             assert.equal(el2.target.innerHTML, 'Download http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf');
-            assert.equal(el2.target.getAttribute('class'), 'file-pdf');
+            assert.equal(el2.target.getAttribute('class'), 'file-icon-pdf');
             el2.setTargetSource('http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.jpg');
-            assert.equal(el2.target.getAttribute('class'), 'file-picture');
+            assert.equal(el2.target.getAttribute('class'), 'file-icon-picture');
         });
     });
 </script>
