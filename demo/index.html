@@ -32,6 +32,14 @@
     <ugo-previewer selector="#field2">
         <video src="" width="320" height="180" controls="controls"></video>
     </ugo-previewer>
+
+    <br/><br><br>
+    <input type="text" id="field3" value="../test/test.gif" />
+    <br/><br/>
+    <ugo-previewer selector="#field3" label="Download {url}" empty-label="Oups, no available file" display-icons>
+        <a href="" target="_blank" />
+    </ugo-previewer>
+
 </div>
 <script>
     window.addEventListener('DOMContentLoaded', function () {
