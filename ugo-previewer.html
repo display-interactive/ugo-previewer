@@ -4,11 +4,16 @@
     <template>
         <content id="contentPreviewer" select="img, video, audio, a"></content>
         <style>
+            :host ::content a {
+                color: #00468C;
+            }
+
             :host ::content .preview-icon {
                 display: block;
                 width: 48px;
                 height: 48px;
-                color: #fff;
+                color: currentColor;
+                fill: currentColor;
             }
         </style>
         <svg style="position: absolute; width: 0; height: 0;" width="0" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
