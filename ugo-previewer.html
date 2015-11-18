@@ -141,7 +141,7 @@
                     this.feedMediaWithPlaceholder();
                     break;
             }
-            this.adaptTargetClass('');
+            this.setTargetClass('file-icon-empty');
         },
 
         /**
@@ -158,39 +158,23 @@
          *  set the target source depending on its type (a -> href, img|video|audio -> src)
          */
         setTargetSource: function(url) {
-            var fileName = url.indexOf('/') != -1 ? url.slice(url.lastIndexOf('/') + 1, url.length) : '';
-            var ext = fileName.indexOf('.') != -1 ? fileName.slice(fileName.lastIndexOf('.') + 1, fileName.length) : '';
-
             switch (this.target.tagName) {
                 case 'A':
                     this.target.setAttribute('href', url);
-                    this.target.innerHTML = this.getRichLabel(url, fileName, ext);
+                    this.target.innerHTML = this.label;
                     break;
                 default:
                     this.target.setAttribute('src', url);
                     break;
             }
-            this.adaptTargetClass(ext);
-        },
-
-        /**
-         *  Includes special vars in the label
-         *
-         *  @returns {string}
-         */
-        getRichLabel: function(url, fileName, ext) {
-            var richLabel = this.label;
-            //Perform replacements
-            richLabel = richLabel.replace(/\{url\}/g, url);
-            richLabel = richLabel.replace(/\{fileName\}/g, fileName);
-            richLabel = richLabel.replace(/\{ext\}/g, ext);
-            return richLabel;
+            this.adaptTargetClass(url);
         },
 
         /**
          *  Change the target class depenfing on the file extension
          */
-        adaptTargetClass: function(ext) {
+        adaptTargetClass: function(url) {
+            var ext = url.indexOf('.') != -1 ? url.slice(url.lastIndexOf('.') + 1, url.length) : '';
             var iconClass = 'file-icon-unknown';
             switch (ext.toLowerCase()) {
                 case 'mp3':
@@ -213,13 +197,20 @@
                 case 'webm':
                     iconClass = 'file-icon-video';
                     break;
-                case '':
-                    iconClass = 'file-icon-empty';
+                default:
+                    iconClass = 'file-icon-unknown';
                     break;
             }
+            this.setTargetClass(iconClass);
+        },
+
+        /**
+         *  Set the appropriate target icon class and remove the others
+         */
+        setTargetClass: function(className) {
             this.removeClasses(this.target, ['file-icon-video', 'file-icon-picture', 'file-icon-pdf',
-                                            'file-icon-music', 'file-icon-empty', 'file-icon-unknown'])
-            this.target.classList.add(iconClass);
+                'file-icon-music', 'file-icon-empty', 'file-icon-unknown'])
+            this.target.classList.add(className);
         },
 
         /**
