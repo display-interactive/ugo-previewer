@@ -20,6 +20,9 @@
 <ugo-previewer id="typical" selector="#field" placeholder="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjQ0LjA0Njg3NSIgeT0iNzAiIHN0eWxlPSJmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MTBwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj4xNDB4MTQwPC90ZXh0PjwvZz48L3N2Zz4=">
     <img alt="Preview" src="" width="140" height="140" />
 </ugo-previewer>
+<ugo-previewer id="fileLink" selector="#field" label="Download file" empty-label="Oups no file">
+    <a src="" />
+</ugo-previewer>
 
 <script>
     suite('<ugo-previewer>', function() {
@@ -68,6 +71,16 @@
                 assert.equal(el.target.getAttribute('src'), target.value);
                 done();
             }, el.interval*2);
+        });
+
+        //Test file link
+        var el2 = document.getElementById('fileLink');
+
+        test('Test class', function() {
+            el2.setTargetSource('http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.pdf');
+            assert.equal(el2.target.getAttribute('class'), 'file-icon-pdf');
+            el2.setTargetSource('http://localhost/medias/common/pdf/comics/blakemortimer/blakemortimer-en_US.jpg');
+            assert.equal(el2.target.getAttribute('class'), 'file-icon-picture');
         });
     });
 </script>
