@@ -10,5 +10,6 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/display-interactive/ugo-previewer.git"
-    }
+    },
+    "version": "0.8.0"
 }
