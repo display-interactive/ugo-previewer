@@ -97,7 +97,7 @@
             if (null !== this.selector) { //without selector attribute does nothing
                 this.source = document.querySelector(this.selector);
                 this.target = Polymer.dom(this.$.contentPreviewer).getDistributedNodes()[0];
-                this.feedMedia();
+                this.fetchMedia();
                 this.addListeners();
             }
         },
@@ -105,70 +105,71 @@
         /**
          * Set media to preview
          */
-        feedMedia: function() {
-            this.debounce('feedMedia', function () {
+        fetchMedia: function() {
+            this.debounce('fetchMedia', function () {
                 var value = this.getSourceValue(),
                     mediaSrc = this.baseUrl + value,
                     apiUrl = this.mediaApiUrl.replace('@media_id@', value);
-                console.log('feedMedia', value, this._isMedia(value), apiUrl);
                 if (value) {
                     if (this._isMedia(value)) {
-                        try {
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('GET', apiUrl, true);
-                            xhr.onreadystatechange = function () {
-                                if (xhr.readyState == 4) {
-                                    if(xhr.status == 200) {
-                                        console.log('media api',xhr);
-                                        var media = JSON.parse(xhr.response);
-                                        var defaultFile = null;
-                                        for (var i = 0; i < media.files.length; ++i) {
-                                            var file = media.files[i];
-                                            if (null == defaultFile) {
-                                                defaultFile = file;
-                                            }
-                                            if (file.is_default == true) {
-                                                defaultFile = file;
-                                                break;
-                                            }
-                                        }
-                                        if (null != defaultFile) {
-                                            mediaSrc = this.baseUrl + defaultFile.src;
-                                            this.setTargetSource(mediaSrc);
-                                        } else {
-                                            this.setEmptySource();
-                                        }
-                                    } else {
-                                        this.setEmptySource();
-                                    }
+                        this._ajaxRequest(apiUrl, 'GET', function(media) {
+                            var defaultFile = null;
+                            for (var i = 0; i < media.files.length; ++i) {
+                                var file = media.files[i];
+                                if (null == defaultFile) {
+                                    defaultFile = file;
                                 }
-                            }.bind(this);
-                            xhr.send(null);
-                        } catch (e) {
-                            this.setEmptySource();
-                        }
-                    } else if (this._isMediaSrc(mediaSrc)) {
-                        try {
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('HEAD', mediaSrc, true);
-                            xhr.onreadystatechange = function () {
-                                if (xhr.readyState == 4) {
-                                    if(xhr.status == 200) {
-                                        this.setTargetSource(mediaSrc);
-                                    } else {
-                                        this.setEmptySource();
-                                    }
+                                if (file.is_default == true) {
+                                    defaultFile = file;
+                                    break;
                                 }
-                            }.bind(this);
-                            xhr.send(null);
-                        } catch (e) {
-                            this.setEmptySource();
-                        }
+                            }
+                            if (null != defaultFile) {
+                                mediaSrc = this.baseUrl + defaultFile.src;
+                            }
+                            this.feedMedia(mediaSrc);
+                        }.bind(this), this.setEmptySource.bind(this));
+                    } else {
+                        this.feedMedia(mediaSrc);
                     }
                 } else {
                     this.setEmptySource();
                 }
             }.bind(this), this.interval);
+        },
+
+        feedMedia: function(mediaSrc) {
+            if (this._isMediaSrc(mediaSrc)) {
+                this._ajaxRequest(mediaSrc, 'HEAD', function() {
+                    this.setTargetSource(mediaSrc);
+                }.bind(this), this.setEmptySource.bind(this));
+            } else {
+                this.setEmptySource();
+            }
+        },
+
+        _ajaxRequest: function(url, method, cb, failure) {
+            try {
+                var xhr = new XMLHttpRequest();
+                xhr.open(method, url, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+                        if(xhr.status == 200) {
+                            try {
+                                var jsonResponse = JSON.parse(xhr.response);
+                                cb(jsonResponse);
+                            } catch (e) {
+                                cb();
+                            }
+                        } else {
+                            failure();
+                        }
+                    }
+                }.bind(this);
+                xhr.send(null);
+            } catch (e) {
+                failure();
+            }
         },
 
         /**
@@ -290,7 +291,7 @@
 
             for (var i = 0; i < events.length; i++) {
                 this.source.addEventListener(events[i], function() {
-                    this.feedMedia();
+                    this.fetchMedia();
                 }.bind(this), false);
             }
         },
