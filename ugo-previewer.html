@@ -27,11 +27,11 @@
             },
 
             /**
-             * Media API url to get back media info, must contain @media_id@ as a placeholder
+             * You can get the source from a different attribute than value
              */
-            mediaApiUrl: {
+            sourceAttr: {
                 type: String,
-                value: ''
+                value: null
             },
 
             /**
@@ -108,68 +108,28 @@
         fetchMedia: function() {
             this.debounce('fetchMedia', function () {
                 var value = this.getSourceValue(),
-                    mediaSrc = this.baseUrl + value,
-                    apiUrl = this.mediaApiUrl.replace('@media_id@', value);
-                if (value) {
-                    if (this._isMedia(value)) {
-                        this._ajaxRequest(apiUrl, 'GET', function(media) {
-                            var defaultFile = null;
-                            for (var i = 0; i < media.files.length; ++i) {
-                                var file = media.files[i];
-                                if (null == defaultFile) {
-                                    defaultFile = file;
-                                }
-                                if (file.is_default == true) {
-                                    defaultFile = file;
-                                    break;
+                    mediaSrc = this.baseUrl + value;
+                if (this._isMedia(mediaSrc)) {
+                    try {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('HEAD', mediaSrc, true);
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState == 4) {
+                                if(xhr.status == 200) {
+                                    this.setTargetSource(mediaSrc);
+                                } else {
+                                    this.setEmptySource();
                                 }
                             }
-                            if (null != defaultFile) {
-                                mediaSrc = this.baseUrl + defaultFile.src;
-                            }
-                            this.feedMedia(mediaSrc);
-                        }.bind(this), this.setEmptySource.bind(this));
-                    } else {
-                        this.feedMedia(mediaSrc);
+                        }.bind(this);
+                        xhr.send(null);
+                    } catch (e) {
+                        this.setEmptySource();
                     }
                 } else {
                     this.setEmptySource();
                 }
             }.bind(this), this.interval);
-        },
-
-        feedMedia: function(mediaSrc) {
-            if (this._isMediaSrc(mediaSrc)) {
-                this._ajaxRequest(mediaSrc, 'HEAD', function() {
-                    this.setTargetSource(mediaSrc);
-                }.bind(this), this.setEmptySource.bind(this));
-            } else {
-                this.setEmptySource();
-            }
-        },
-
-        _ajaxRequest: function(url, method, cb, failure) {
-            try {
-                var xhr = new XMLHttpRequest();
-                xhr.open(method, url, true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
-                        if(xhr.status == 200) {
-                            try {
-                                var jsonResponse = JSON.parse(xhr.response);
-                                cb(jsonResponse);
-                            } catch (e) {
-                                cb();
-                            }
-                        } else {
-                            failure();
-                        }
-                    }
-                }.bind(this);
-                xhr.send(null);
-            } catch (e) {
-                failure();
-            }
         },
 
         /**
@@ -273,13 +233,19 @@
          * @returns {string|Number}
          */
         getSourceValue: function() {
+            var valueContainer = null;
             switch (this.source.tagName) {
                 case 'SELECT':
-                    return this.source.options[this.source.selectedIndex].value;
+                    valueContainer = this.source.options[this.source.selectedIndex];
                     break;
                 default:
-                    return this.source.value;
+                    valueContainer = this.source;
                     break;
+            }
+            if (null !== this.sourceAttr) {
+                return valueContainer.getAttribute(this.sourceAttr);
+            } else {
+                return valueContainer.value;
             }
         },
 
@@ -300,15 +266,7 @@
          * @return {Boolean}
          * @private
          */
-        _isMedia: function(mediaId) {
-            return !isNaN(parseInt(mediaId));
-        },
-
-        /**
-         * @return {Boolean}
-         * @private
-         */
-        _isMediaSrc: function(url) {
+        _isMedia: function(url) {
             var re = new RegExp('^.+\\.[a-z0-9].{1,4}$', 'i');
 
             return re.test(url);
