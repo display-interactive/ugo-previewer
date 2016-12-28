@@ -31,7 +31,7 @@
              */
             sourceAttr: {
                 type: String,
-                value: null
+                value: 'value'
             },
 
             /**
@@ -242,11 +242,8 @@
                     valueContainer = this.source;
                     break;
             }
-            if (null !== this.sourceAttr) {
-                return valueContainer.getAttribute(this.sourceAttr);
-            } else {
-                return valueContainer.value;
-            }
+            
+            return valueContainer.getAttribute(this.sourceAttr);
         },
 
         /**
