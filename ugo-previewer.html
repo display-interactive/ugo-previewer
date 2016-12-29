@@ -27,6 +27,14 @@
             },
 
             /**
+             * Selector used to retrieve the source
+             */
+            sourcePath: {
+                type: String,
+                value: null
+            },
+
+            /**
              * You can get the source from a different attribute than value
              */
             sourceProp: {
@@ -239,8 +247,14 @@
                     valueContainer = this.source.options[this.source.selectedIndex];
                     break;
                 default:
-                    valueContainer = this.source;
+                    if (null !== this.sourcePath) {
+                        valueContainer = document.querySelector(this.sourcePath);
+                    }
                     break;
+            }
+
+            if (null === valueContainer) {
+                valueContainer = this.source;
             }
 
             return valueContainer[this.sourceProp] != undefined ? valueContainer[this.sourceProp] : valueContainer.getAttribute(this.sourceProp);
