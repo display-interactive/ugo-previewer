@@ -5,7 +5,7 @@
         "Florian Roy"
     ],
     "description": "Polymer Element that help to previews image, audio, video written in a form field",
-    "main": "element/*",
+    "main": "ugo-previewer.html",
     "ignore": [
         "**/.*",
         "node_modules",
