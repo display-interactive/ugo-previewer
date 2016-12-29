@@ -29,7 +29,7 @@
             /**
              * You can get the source from a different attribute than value
              */
-            sourceAttr: {
+            sourceProp: {
                 type: String,
                 value: 'value'
             },
@@ -242,8 +242,8 @@
                     valueContainer = this.source;
                     break;
             }
-            
-            return valueContainer.getAttribute(this.sourceAttr);
+
+            return valueContainer[this.sourceProp];
         },
 
         /**
@@ -253,7 +253,7 @@
             var events = this.event.split(' ');
 
             for (var i = 0; i < events.length; i++) {
-                this.source.addEventListener(events[i], function() {
+                this.source.addEventListener(events[i], function(e) {
                     this.fetchMedia();
                 }.bind(this), false);
             }
